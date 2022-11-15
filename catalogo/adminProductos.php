@@ -23,7 +23,7 @@
                     <th>Marca</th>
                     <th>Categoria</th>
                     <th colspan="2">
-                        <a href="" class="btn btn-outline-secondary">
+                        <a href="formAgregarProducto.php" class="btn btn-outline-secondary">
                             Agregar
                         </a>
                     </th>
@@ -34,11 +34,11 @@
         while ( $producto = mysqli_fetch_assoc( $productos ) ){
 ?>            
                 <tr>
-                    <td>Imagen</td>
+                    <td><img src="productos/<?= $producto['prdImagen'] ?>" class="img-thumbnail"></td>
                     <td><?= $producto['prdNombre'] ?></td>
                     <td>$<?= $producto['prdPrecio'] ?></td>
-                    <td>Marca</td>
-                    <td>Categoria</td>
+                    <td><?= $producto['mkNombre'] ?></td>
+                    <td><?= $producto['catNombre'] ?></td>
                     <td>
                         <a href="" class="btn btn-outline-secondary">
                             Modificar
