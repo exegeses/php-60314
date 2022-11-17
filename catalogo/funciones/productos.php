@@ -24,10 +24,42 @@
         }
     }
 
+    function verProductoPorID( $idProducto ) : array | false
+    {
+        $sql = "SELECT 
+                        prdImagen, 
+                        productos.idMarca, mkNombre,
+                        productos.idCategoria, catNombre,  
+                        idProducto, 
+                        prdPrecio, prdNombre, prdDescripcion 
+                    FROM productos
+                    INNER JOIN marcas 
+                        ON marcas.idMarca = productos.idMarca
+                    INNER JOIN categorias 
+                        ON categorias.idCategoria = productos.idCategoria
+                WHERE idProducto = ".$idProducto;
+        $link = conectar();
+        try{
+            $resultado = mysqli_query( $link, $sql);
+            $producto = mysqli_fetch_assoc( $resultado );
+            return $producto;
+        }
+        catch( Exception $e )
+        {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+    
     function subirImagen() : string
     {
-        //si no enviaron archivo
+        //si no enviaron archivo agregarProducto()
         $prdImagen = 'noDisponible.png';
+
+        //si no enviaron archivo moficarProducto()
+        if( isset( $_POST['imgActual'] ) ){
+            $prdImagen = $_POST['imgActual'];
+        }
 
         //si enviaron archivo
         if( $_FILES['prdImagen']['error'] == 0 ){
@@ -79,4 +111,35 @@
             echo $e->getMessage();
             return false;
         }
+    }
+
+    function modificarProducto() : bool
+    {
+        $idProducto = $_POST['idProducto'];
+        $prdNombre = $_POST['prdNombre'];
+        $prdPrecio = $_POST['prdPrecio'];
+        $idMarca = $_POST['idMarca'];
+        $idCategoria = $_POST['idCategoria'];
+        $prdDescripcion = $_POST['prdDescripcion'];
+        $prdImagen = subirImagen();
+
+        try{
+            $link = conectar();
+            $sql = "UPDATE productos
+                        SET prdNombre = '".$prdNombre."',
+                            prdPrecio = ".$prdPrecio.",
+                            idCategoria = ".$idCategoria.",
+                            idMarca = ".$idMarca.",
+                            prdImagen = '".$prdImagen."',
+                            prdDescripcion = '".$prdDescripcion."'
+                        WHERE idProducto = ".$idProducto;
+            $resultado = mysqli_query( $link, $sql );
+            return  $resultado;
+        }
+        catch ( Exception $e )
+        {
+            echo $e->getMessage();
+            return false;
+        }
+
     }
