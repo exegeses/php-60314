@@ -4,7 +4,7 @@
     function login()
     {
         $email = $_POST['email'];
-        $clave = $_POST['clave'];
+        $clave = $_POST['clave'];//sin encriptar
         $link = conectar();
         $sql = "SELECT idUsuario, nombre, apellido, 
                         email, clave, idRol
@@ -30,6 +30,15 @@
          * ## Rutina de autenticación
          *    sesiones
          * */
+        $datosUsuario = mysqli_fetch_assoc($resultado);
+        /* clave */
+        $_SESSION['idUsuario'] = $datosUsuario['idUsuario'];
+        $_SESSION['nombre'] = $datosUsuario['nombre'];
+        $_SESSION['apellido'] = $datosUsuario['apellido'];
+        $_SESSION['idUsuario'] = $datosUsuario['idUsuario'];
+        $_SESSION['email'] = $datosUsuario['email'];
+        $_SESSION['idRol'] = $datosUsuario['idRol'];
+        //redirección a admin
         header('location: admin.php');
 
     }
