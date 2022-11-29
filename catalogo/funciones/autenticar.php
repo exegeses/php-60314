@@ -48,9 +48,10 @@
         return false;
     }
 
-    function logout()
+    function logout() : void
     {
-
+        session_unset();
+        session_destroy();
     }
 
     function autenticar() : void
@@ -58,5 +59,12 @@
         if( !isset( $_SESSION['login'] ) ){
             //redirección a formLogin.php
             header('location: formLogin.php?error=2');
+        }
+    }
+
+    function irAlIndex()
+    {
+        if( isset($_SESSION['login']) ) {
+            header('location: index.php');
         }
     }

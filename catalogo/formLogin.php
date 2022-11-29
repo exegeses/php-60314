@@ -1,5 +1,7 @@
 <?php
     require 'config/config.php';
+    require 'funciones/autenticar.php';
+        irAlIndex();
     include 'layout/header.php';
     include 'layout/nav.php';
 ?>
