@@ -1,5 +1,7 @@
 <?php
-    //require 'config/config.php';
+    require 'config/config.php';
+    require 'funciones/autenticar.php';
+        autenticar();
     require 'funciones/conexion.php';
     require 'funciones/productos.php';
     $productos = listarProductos();

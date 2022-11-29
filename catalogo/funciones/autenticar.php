@@ -26,21 +26,26 @@
             header('location: formLogin.php?error=1');
             return false;
         }
-        /*
-         * ## Rutina de autenticación
-         *    sesiones
-         * */
         $datosUsuario = mysqli_fetch_assoc($resultado);
-        /* clave */
-        $_SESSION['idUsuario'] = $datosUsuario['idUsuario'];
-        $_SESSION['nombre'] = $datosUsuario['nombre'];
-        $_SESSION['apellido'] = $datosUsuario['apellido'];
-        $_SESSION['idUsuario'] = $datosUsuario['idUsuario'];
-        $_SESSION['email'] = $datosUsuario['email'];
-        $_SESSION['idRol'] = $datosUsuario['idRol'];
-        //redirección a admin
-        header('location: admin.php');
-
+        if( password_verify( $clave, $datosUsuario['clave'] ) ){
+        /*
+        * ## Rutina de autenticación
+        *    sesiones
+        * */
+            $_SESSION['login'] = 1;
+            $_SESSION['idUsuario'] = $datosUsuario['idUsuario'];
+            $_SESSION['nombre'] = $datosUsuario['nombre'];
+            $_SESSION['apellido'] = $datosUsuario['apellido'];
+            $_SESSION['email'] = $datosUsuario['email'];
+            $_SESSION['idRol'] = $datosUsuario['idRol'];
+            //redirección a admin
+            header('location: admin.php');
+            return true;
+        }
+        /* si llega hasta acá, puso mal clave */
+        //redirección a formLogin.php
+        header('location: formLogin.php?error=1');
+        return false;
     }
 
     function logout()
@@ -48,7 +53,10 @@
 
     }
 
-    function autenticar()
+    function autenticar() : void
     {
-
+        if( !isset( $_SESSION['login'] ) ){
+            //redirección a formLogin.php
+            header('location: formLogin.php?error=2');
+        }
     }

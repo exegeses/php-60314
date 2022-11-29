@@ -27,6 +27,9 @@
 <?php
         $mensaje = 'Usuario y/o clave incorrectos';
         if( isset($_GET['error']) ){
+            if ($_GET['error'] == 2) {
+               $mensaje = 'Debe loguearse para continuar';
+            }
 ?>        
         <div class="alert text-danger bg-light p-4 col-8 mx-auto shadow">
             <?= $mensaje ?>
