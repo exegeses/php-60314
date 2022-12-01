@@ -68,3 +68,10 @@
             header('location: index.php');
         }
     }
+    function noAdmin() : void
+    {
+        if( $_SESSION['idRol'] != 1 ){
+            //redirección a noAdmin.php
+            header('location: noAdmin.php');
+        }
+    }

@@ -1,5 +1,7 @@
 <?php
-    //require 'config/config.php';
+    require 'config/config.php';
+    require 'funciones/conexion.php';
+    require 'funciones/roles.php';
     include 'layout/header.php';
     include 'layout/nav.php';
 ?>
@@ -37,6 +39,27 @@
                     <input type="password" name="clave"
                            class='form-control' id="clave" required>
                 </div>
+
+<?php
+        if( isset($_SESSION['idRol']) && $_SESSION['idRol'] == 1 ){
+            $roles = listarRoles();
+?>
+                <div class="form-group mb-4">
+                    <label for="idRol">Rol</label>
+                    <select class="form-select" name="idRol" id="idRol" required>
+                        <option value="">Seleccione un rol</option>
+        <?php
+                while( $rol = mysqli_fetch_assoc( $roles ) ){
+        ?>
+                        <option value="<?= $rol['idRol'] ?>"><?= $rol['rol'] ?></option>
+        <?php
+                }
+        ?>
+                    </select>
+                </div>
+<?php
+        }
+?>
 
                 <button class='btn btn-dark my-3 px-4'>Agregar usuario</button>
                 <a href="adminUsuarios.php" class='btn btn-outline-secondary'>
