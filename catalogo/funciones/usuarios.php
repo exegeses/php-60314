@@ -51,3 +51,29 @@
             return false;
         }
     }
+
+    function modificarUsuario() : bool
+    {
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $email = $_POST['email'];
+        $idUsuario = $_POST['idUsuario'];
+        $sql = "UPDATE usuarios
+                    SET nombre = '".$nombre."',
+                        apellido = '".$apellido."',
+                        email = '".$email."'
+                    WHERE idUsuario = ".$idUsuario;
+        $link = conectar();
+        try {
+            $resultado = mysqli_query($link, $sql);
+            // actualizamos datos de sesión
+            $_SESSION['nombre'] = $nombre;
+            $_SESSION['apellido'] = $apellido;
+            $_SESSION['email'] = $email;
+            return $resultado;
+        }
+        catch ( Exception $e ){
+            echo $e->getMessage();
+            return false;
+        }
+    }
