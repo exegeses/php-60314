@@ -77,3 +77,51 @@
             return false;
         }
     }
+
+    function modificarClave() : bool
+    {
+        //capturamos clave sin encriptar
+        $clave = $_POST['clave'];
+        /** obtenemos la contraseña encriptada **/
+        $link = conectar();
+        $sql = "SELECT clave 
+                    FROM usuarios
+                    WHERE idUsuario = ".$_SESSION['idUsuario'];
+        try {
+            $resultado = mysqli_query($link, $sql);
+        }
+        catch ( Exception $e ){
+            echo $e->getMessage();
+            return false;
+        }
+        /** verificamos conincidencia **/
+        $datos = mysqli_fetch_assoc($resultado);
+        $claveHash = $datos['clave'];
+        if( !password_verify( $clave, $claveHash ) ){
+            //redirección a form con mensaje error
+            header('location: formModificarClave.php?error=1');
+            return false;
+        }
+        /*## en esta punto la contraseña actual es correcta ##*/
+        //capturamos newClave y newClave2
+        $newClave = $_POST['newClave'];
+        $newClave2 = $_POST['newClave2'];
+        //compraramos igualdad
+        if( $newClave == $newClave2 ){
+            //encriptamos clave
+            $claveHash = password_hash($newClave, PASSWORD_DEFAULT);
+            /*## modificación de clave ##*/
+            $sql = "UPDATE usuarios
+                        SET clave = '".$claveHash."'
+                        WHERE idUsuario = ".$_SESSION['idUsuario'];
+            try {
+                $resultado = mysqli_query($link, $sql);
+                return $resultado;
+            }
+            catch ( Exception $e ){
+                echo $e->getMessage();
+                return false;
+            }
+        }
+        return false;
+    }
