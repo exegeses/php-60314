@@ -125,3 +125,80 @@
         }
         return false;
     }
+
+    function generarCodigo( $largo = 16 ) : string
+    {
+        $chars = [
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+            "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+            1,2,3,4,5,6,7,8,9,0
+        ];
+
+        $largoArray = count( $chars ) - 1;
+        $codigo = '';
+        for( $i = 0; $i < $largo; $i++ ){
+            $nRandom = rand( 0, $largoArray );
+            $codigo .= $chars[ $nRandom ];
+        }
+        return $codigo;
+    }
+
+    function mailCodigo( string $email, string $codigo ) : void
+    {
+        $asunto = 'Pedido de reseteo de contraseña';
+        $destinatario = $email;
+        $cuerpo = '<div style="background-color: #2c3648;
+                    color: #e6e4e4; 
+                    font-family: Arial;
+                    width: 500px;
+                    margin: auto;
+                    padding:12px;
+                    border-radius: 12px;">';
+        $cuerpo .= 'Haga click aqu´´i para ';
+        //$url = 'http://php-60314.curso:8080/catalogo/formResetClave.php?cod='.$codigo.'&email='.$email;
+        $url = 'https://php-60314.000webhostapp.com/formResetClave.php?cod='.$codigo.'&email='.$email;
+        $cuerpo .= '<a style="color: #e6e4e4;
+                              font-weight:600;" href="'.$url.'">activar contraseña</a>';
+        $cuerpo .= '</div>';
+
+        //encabezados adicionales
+        $headers = 'From: emapresa@mail.com' . "\r\n";
+        $headers .= "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+        //enviamos el email
+        mail( $destinatario, $asunto, $cuerpo, $headers );
+    }
+
+    function mailResetClave() : void
+    {
+        $email = $_POST['email'];
+        $link = conectar();
+        $sql = "SELECT 1 FROM usuarios 
+                    WHERE email = '".$email."'";
+        try {
+            $restultado = mysqli_query($link, $sql);
+            $cantidad = mysqli_num_rows($restultado);
+            if( $cantidad == 0 ){
+                header('location: formReset.php?error=1');
+            }
+
+        }catch( Exception $e ) {
+            echo $e->getMessage();
+        }
+
+        /* si coincide el email */
+        $codigo = generarCodigo();
+            /* almacenamos código en tabla reset_clave */
+        $sql = "INSERT INTO reset_clave
+                            codigo
+                        VALUE ( '".$codigo."' )";
+        try {
+            $restultado = mysqli_query($link, $sql);
+        }catch( Exception $e ) {
+            echo $e->getMessage();
+        }
+            /* enviamos email de reseteo */
+        mailCodigo( $email, $codigo);
+
+    }
+
