@@ -199,6 +199,34 @@
         }
             /* enviamos email de reseteo */
         mailCodigo( $email, $codigo);
-
     }
 
+    function checkCodigo()
+    {
+        $codigo = $_GET['cod'];
+        $link = conectar();
+        $sql = "SELECT 1 FROM reset_clave
+                    WHERE codigo = '".$codigo."'
+                     AND activo = 1";
+        try {
+            $resultado = mysqli_query($link, $sql);
+        }catch( Exception $e ) {
+            echo $e->getMessage();
+        }
+        $cantidad = mysqli_num_rows($resultado);
+        if( $cantidad == 0 ){
+            //si no coincide o arctico NO está en 1
+            header( 'location: errorCodigo.php' );
+            return false;
+        }
+        $sql = "UPDATE reset_clave
+                  SET activo = 0
+                  WHERE codigo = '".$codigo."'";
+        try {
+            mysqli_query($link, $sql);
+        }catch( Exception $e ) {
+            echo $e->getMessage();
+        }
+        return true;
+
+    }
