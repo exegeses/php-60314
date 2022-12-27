@@ -190,7 +190,7 @@
         $codigo = generarCodigo();
             /* almacenamos código en tabla reset_clave */
         $sql = "INSERT INTO reset_clave
-                            codigo
+                            ( codigo )
                         VALUE ( '".$codigo."' )";
         try {
             $restultado = mysqli_query($link, $sql);

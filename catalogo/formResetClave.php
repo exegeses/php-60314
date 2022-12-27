@@ -1,10 +1,10 @@
 <?php
     require 'config/config.php';
-    include 'layout/header.php';
-    include 'layout/nav.php';
     require 'funciones/conexion.php';
     require 'funciones/usuarios.php';
     checkCodigo();
+    include 'layout/header.php';
+    include 'layout/nav.php';
 ?>
 
     <main class="container py-4">
