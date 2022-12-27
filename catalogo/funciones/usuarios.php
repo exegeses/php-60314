@@ -228,5 +228,28 @@
             echo $e->getMessage();
         }
         return true;
+    }
 
+    function modificarResetClave() : bool
+    {
+        $clave = $_POST['clave'];
+        $clave2 = $_POST['clave2'];
+        $email = $_POST['email'];
+        if ( $clave != $clave2 ){
+            header( 'location: formResetClave.php?error=1&email='.$email );
+            return false;
+        }
+        //encriptamos la clave
+        $claveHash = password_hash($clave, PASSWORD_DEFAULT);
+        $link = conectar();
+        $sql = "UPDATE usuarios 
+                    SET clave = '".$claveHash."'
+                  WHERE email = '".$email."'";
+        try {
+            mysqli_query($link, $sql);
+            return true;
+        }catch( Exception $e ) {
+            echo $e->getMessage();
+            return false;
+        }
     }

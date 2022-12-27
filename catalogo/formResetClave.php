@@ -36,6 +36,16 @@
             </form>
         </div>
 
+<?php
+    if( isset($_GET['error']) ){
+?>
+        <div class="alert bg-light p-4 col-8 mx-auto shadow text-danger">
+            Las contraseñas no coinciden, intente nuevamente.
+        </div>
+<?php
+    }
+?>
+
         <script>
             let form = document.querySelector('#formulario');
             let clave = document.querySelector('#clave');
