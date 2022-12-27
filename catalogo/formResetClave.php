@@ -18,7 +18,7 @@
                 <input type="password" name="clave"
                        class='form-control' id="clave">
                 <div class="text-danger fs-6" id="msjClave">
-                    Debe completar el campo Contraseña actual
+                    Debe completar el campo Contraseña nueva
                 </div>
             </div>
             <div class='form-group'>
@@ -26,13 +26,13 @@
                 <input type="password" name="clave2"
                        class='form-control' id="clave2">
                 <div class="text-danger fs-6" id="msjClave2">
-                    Debe completar el campo Repita contraseña con un valor igual a Nueva contraseña
+                    Debe completar el campo Repita contraseña con un valor igual a Contraseña nueva
                 </div>
             </div>
             <input type="hidden" name="email"
                    value="<?= $_GET['email'] ?>">
 
-            <button class='btn btn-dark my-3 px-4'>Agregar usuario</button>
+            <button class='btn btn-dark my-3 px-4'>Modificar contraseña</button>
             </form>
         </div>
 
