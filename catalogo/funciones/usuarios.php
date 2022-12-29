@@ -17,6 +17,26 @@
         }
     }
 
+    function verUsuarioPorID() : array | false
+    {
+        $idUsuario = $_GET['idUsuario'];
+        $link = conectar();
+        $sql = "SELECT idUsuario, nombre, apellido, email, rol, u.idRol
+                        FROM usuarios u
+                        JOIN roles r 
+                          ON u.idRol = r.idRol
+                       WHERE idUsuario = ".$idUsuario;
+        try {
+            $resultado = mysqli_query( $link, $sql );
+            $usuario = mysqli_fetch_assoc($resultado);
+            return $usuario;
+        }
+        catch ( Exception  $e ){
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
     function agregarUsuario() : bool
     {
         $nombre = $_POST['nombre'];
@@ -58,18 +78,28 @@
         $apellido = $_POST['apellido'];
         $email = $_POST['email'];
         $idUsuario = $_POST['idUsuario'];
+        $sqlRol = '';
+        if( isset($_POST['idRol']) ){  // $_SESSION['idRol']==1
+            $idRol = $_POST['idRol'];
+            $sqlRol = ", idRol = '".$idRol."'";
+        }
+
         $sql = "UPDATE usuarios
                     SET nombre = '".$nombre."',
                         apellido = '".$apellido."',
-                        email = '".$email."'
-                    WHERE idUsuario = ".$idUsuario;
+                        email = '".$email."'";
+        $sql .= $sqlRol;
+        $sql .= " WHERE idUsuario = ".$idUsuario;
         $link = conectar();
         try {
             $resultado = mysqli_query($link, $sql);
-            // actualizamos datos de sesión
-            $_SESSION['nombre'] = $nombre;
-            $_SESSION['apellido'] = $apellido;
-            $_SESSION['email'] = $email;
+            /* actualizamos datos de sesión
+             SOLAMENTE si NO es admin */
+            if( $_SESSION['idRol'] != 1 ){
+                $_SESSION['nombre'] = $nombre;
+                $_SESSION['apellido'] = $apellido;
+                $_SESSION['email'] = $email;
+            }
             return $resultado;
         }
         catch ( Exception $e ){
@@ -249,6 +279,23 @@
             mysqli_query($link, $sql);
             return true;
         }catch( Exception $e ) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    function eliminarUsuario() : bool
+    {
+        $idUsuario = $_POST['idUsuario'];
+        $link = conectar();
+        $sql = "DELETE 
+                    FROM usuarios
+                    WHERE idUsuario = " . $idUsuario;
+        try {
+            $resultado = mysqli_query( $link, $sql );
+            return $resultado;
+        }
+        catch ( Exception $e ) {
             echo $e->getMessage();
             return false;
         }
